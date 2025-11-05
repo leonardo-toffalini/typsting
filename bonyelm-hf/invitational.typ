@@ -120,6 +120,11 @@
   $
     #P^(Sigma_k) subset.eq#NP^(Sigma_k) inter #coNP^(Sigma_k).
   $
+
+  Ha $L in #P^(Sigma_k)$, akkor $L in #NP^(Sigma_k)$, mivel egy
+  nemdegterminisztikus TG tud működni mint egy determinisztikus TG.
+
+  Továbbá, ha $L in #P^(Sigma_k)$, akkor $L in #coNP^(Sigma_k)$.
 ]
 
 #exercise[
@@ -128,5 +133,70 @@
 
 #solution[
   Ha $#BPP = #RP union #coRP$, akkor $ #BPP = "co"(#BPP) = "co"(#RP union #coRP) = #coRP inter #RP = #ZPP. $
+]
+
+#exercise[
+  1. Mennyi $D^((3))(E Q)$?
+  2. Mutass egy függvényt, amire $Omega(n)$ bit kommunikációja szükséges.
+]
+
+#solution[
+
+  *1.*
+
+  Protokoll:
+  1. Ha Alíz azt látja, hogy $y = z$, akkor küld egy $1$ bitet, kölönben $0$-át
+     küld.
+  2. Innentől már Bob és Charlie is tudják $f(x, y, z)$ értékét.
+
+  Mivel csak akkor lehet a három szám egyenlő, ha Alíz azt mondta, hogy $y = z$
+  és Bob látja, hogy $x = z$. Alíz üzenete alapján Bob már tudja, hogy az ő
+  száma megegyezik Charlie-ével, továbbá látja, hogy Charlie száma megegyezik
+  Alízéval.
+
+  Így a protokoll költsége $1$. Tehát $D^((3))(E Q) = 1$.
+
+  *2.*
+  
+  Hasonlóképpen definiáljuk a kommunikációs mátrixot mint a standard
+  determinisztikus két játékos esetben. Azaz legyen A-nak, B-nek, és C-nek
+  egy-egy dimenziója. Tehát legyen $M$ a kommunikációs mátrix, ahol $M[x, y,
+  z] = 1$, pontosan akkor, ha $f(x, y, z) = 1$.
+
+  Figyeljük meg, hogy ezen játékszabályok szerint egy játékos tudja a másik két
+  játékos értékét, tehát olyan mintha a kommunikációs mátrixnak egy oldalára
+  vett vetületét látja csak.
+
+  Ötlet: Találjunk ki egy olyan függvényt aminek a vetülete mindegyik oldalra
+  egy csupa $1$-es mátrix. Továbbá, legyen ez a függvény a lehető _legritkább_.
+  Azaz, ha lehet legyen olyan, hogy bármelyik oldal felől nézzük, mindegyik $1
+  times 1 times 2^n$-es vektorban csak egy darab $1$-es.
+
+
+  $
+    forall i, j in [2^n] quad quad  sum_(k = 1)^(2^k) M[i, j, k] = 1
+  $
+
+  Képzeljünk el egy $2^n times 2^n$ -es táblázatot, ami olyan mint egy sudoku,
+  csak elfeletkezünk a négyzetekről és csak a sorokat és oszlopokat figyeljük.
+  Azaz, mindegyik sorban és mindegyik oszlopan mindegyik szám $1$-től $2^n$
+  pontosan egyszer szerepel.
+
+  Fixáljunk le egy $S$ helyesen kitöltött ilyen sudokut táblát és legyen az az
+  $f(i, j, k)$ függvény, hogy $f(i, j, k) = 1$ pontosan akkor, ha $S[i, j] =
+  k$.
+
+  A sudoku szabályaink szerint így tényleg igaz, hogy bármelyik oldalról nézve
+  csupa $1$-es mátrixot látunk, és a lehető legritkább.
+
+  Azt állítom, hogy ehez a függvényhez legalább $n$ bit kommunikációja szükséges.
+
+  Mivel mindegyik oldalról csupa $1$-et lát mindegyik játékos, ez azt jelenti,
+  hogy nem kapnak semmi új információt az alapján, hogy látják a másik két
+  játékos számait. Továbbá, egy játékos ha ránéz a saját vetületére nem tudja a
+  mélységét egyik $1$-esnek sem. Tehát ahhoz, hogy bármelyik játékos tudja a
+  saját vetületének a mélységét, a saját számát ismernie kell. Más szóval,
+  legalább $n$ bit kommunikációja szükséges.
+
 ]
 
