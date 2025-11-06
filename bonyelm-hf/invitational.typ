@@ -1,4 +1,5 @@
 #import "@preview/thmbox:0.3.0": *
+#import "@preview/cetz:0.4.2"
 #show: thmbox-init()
 
 #let exercise-counter = counter("exercise")
@@ -87,7 +88,7 @@
   hogy $forall y_2 dots Q y_(k+1) P(x, y_1, dots, y_(k+1))$, ami pont $Pi_k$
   alakú, tehát $Sigma_(k+1) subset.eq #NP^(Pi_k)$.
 
-  Viszont tudjuk, hogy $Pi_k = "co"(Sigma_k)$ De Morgan azonosság miatt,
+  Viszont tudjuk, hogy $Pi_k = "co"(Sigma_k)$ a De Morgan azonosság miatt,
   viszont egy NDTG-nek nem változtat, hogy egy $"co"(A)$ vagy $A$ orákuluma
   van. Így $Sigma_(k+1) subset.eq #NP^(Sigma_k)$, ahogyan kívántuk.
 
@@ -112,7 +113,7 @@
     #P^(Sigma_k) = #NP^(Sigma_k) inter #coNP^(Sigma_k).
   $
 
-  Nagyon jó lenne, ha tudnánk ezt bizonyítani, mert az azt jelentené, hogy
+  Fenomenális lenne ezt bizonyítani, mert az azt jelentené, hogy
   $k=0$-ra megoldottuk a hosszú idők óta nyílt kérdést $#P =^? #NP inter
   #coNP$.
 
@@ -124,7 +125,7 @@
   Ha $L in #P^(Sigma_k)$, akkor $L in #NP^(Sigma_k)$, mivel egy
   nemdegterminisztikus TG tud működni mint egy determinisztikus TG.
 
-  Továbbá, ha $L in #P^(Sigma_k)$, akkor $L in #coNP^(Sigma_k)$.
+  Továbbá, ha $L in #P^(Sigma_k)$, akkor $overline(L) in #P^(Sigma_k) ==> L in #coNP^(Sigma_k)$.
 ]
 
 #exercise[
@@ -133,6 +134,58 @@
 
 #solution[
   Ha $#BPP = #RP union #coRP$, akkor $ #BPP = "co"(#BPP) = "co"(#RP union #coRP) = #coRP inter #RP = #ZPP. $
+]
+
+#exercise[
+  Mutassuk meg, hogy a módosított GG játékben eldönteni, hogy ki nyer PSPACE teljes.
+]
+
+#solution[
+  A visszavezetés nagyon hasonló lesz az előadáson látott TQBF $prop$ GG
+  visszavezetésre. Annyi kell csak változtatnunk az ötleten, hogy amikor Bob
+  lép, akor ne tudja megváltoztatni a kvantált formula jelentését, amit
+  kódolunk a GG gráf struktúrájával.
+
+  Ezt úgy fogjuk csinálni, hogy a gráf első fázisában, ami kódolja a
+  kvantorokat és a változók értékadásait, ott Bob mindig csak olyan élen
+  léphet, aminek a végén egy $1$ befokú csúcs van.
+
+  Láthatjuk, hogy csak annyit kell csinálni, hogy a standard rombusz
+  @fig:rombusz, helyett egy széthúzott rombuszt kell adni Bob-nak. És Bob a
+  pirosra színezett éleken léphet.
+
+  #figure(
+    cetz.canvas({
+      import cetz.draw: *
+
+      circle((0 -2,  2), radius: 5.0pt, name: "1top")
+      circle((-1 -2, 1), radius: 5.0pt, name: "1left")
+      circle((1-2,   1), radius: 5.0pt, name: "1right")
+      circle((0-2,   0), radius: 5.0pt, name: "1bot")
+
+      circle((0+2,  3), radius: 5.0pt, name: "2top")
+      circle((-1+2, 2), radius: 5.0pt, name: "2left1")
+      circle((1+2,  2), radius: 5.0pt, name: "2right1")
+      circle((-1+2, 1), radius: 5.0pt, name: "2left2")
+      circle((1+2,  1), radius: 5.0pt, name: "2right2")
+      circle((0+2,  0), radius: 5.0pt, name: "2bot")
+
+      line("1top",   "1left", mark: (end: ">", scale: 0.6))
+      line("1top",   "1right", mark: (end: ">", scale: 0.6))
+      line("1left",  "1bot", mark: (end: ">", scale: 0.6))
+      line("1right", "1bot", mark: (end: ">", scale: 0.6))
+
+      line("2top",   "2left1", mark: (end: ">", scale: 0.6))
+      line("2top",   "2right1", mark: (end: ">", scale: 0.6))
+      line("2left1",   "2left2", mark: (end: ">", scale: 0.6), stroke: red)
+      line("2right1",   "2right2", mark: (end: ">", scale: 0.6), stroke: red)
+      line("2left2",  "2bot", mark: (end: ">", scale: 0.6))
+      line("2right2", "2bot", mark: (end: ">", scale: 0.6))
+
+    }),
+    caption: [Rombusz és széthúzott rombusz]
+  )<fig:rombusz>
+
 ]
 
 #exercise[
