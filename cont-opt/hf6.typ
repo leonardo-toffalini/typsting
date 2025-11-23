@@ -17,14 +17,14 @@
 )
 
 #align(center)[
-  #text(blue, size: 25pt)[*Homework 5*] \
+  #text(blue, size: 25pt)[*Homework 6*] \
 
   Toffalini Leonardo
 ]
 
 
 #exercise[
-  Let $f: RR^n -> RR$ be a function and define $tilde(f) : RR^n -> RR$ as
+  Let $f: RR^n -> RR$ be a function and define $tilde(f) : RR^n -> RR$ a
   $tilde(f)(x) = f(A x + b)$ where $A in RR^(n times n)$ is an invertible
   matrix and $b in RR^n$. Prove that if $x_0$ moves to $x_1$ by applying one
   step of Newton's method with respect to $tilde(f)$, then $y_0 = A x_0 + b$
@@ -71,7 +71,80 @@
   3. $f(x) = -sum_(i=1)^n log (x_i)$ on $K = RR^n_(>0)$.
 ]
 
-#solution[
+#solution[ \
+  *1.* \
+  $
+    H(x) = f''(x) = (1/cos x sin x)' = tg' x = 1/(cos^2 x).
+  $
+
+  $
+    (1 - 3 delta) H(x) = (1 - 3 delta) 1/(cos^2 x) <=^? 1/(cos^2 y)
+  $
+
+  $
+    (1 - 3 delta) 1/(cos^2 x) <= 1 < 1/(cos^2 y)
+  $
+
+  $
+    1 - 3 delta <= cos^2 x
+  $
+
+  Let $delta = 2\/3$, then
+  $
+    1 - 3 delta = -1 <= cos^2 x quad forall x.
+  $
+
+  We did not even have to use the fact that $norm(y - x)_x <= delta$.
+
+  The same reasoning works for the opposite direction aswell.
+
+  *2.* \ 
+  $
+    H(x) = f''(x) = (1 + log x -log (1 - x) - 1)' = (log x - log (1 - x))' = 1/x + 1/(1 - x).
+  $
+
+  $
+    (y - x)^2/x + (y - x)^2/(1 - x) <= delta
+  $
+
+  $
+    (1 - 3 delta) (1/x + 1/(1 - x)) <=^? 1/y + 1/(1 - y)
+  $
+
+  $
+    1/1 + 1/(1 - 0) = 2 < 1/y + 1/(1 - y)
+  $
+
+  It is enough to show
+  $
+    (1 - 3 delta)(1/x + 1/(1 - x)) = (1 - 3 delta) 1/(x (1 - x)) <= 2
+  $
+  $
+    1 - 3 delta <= 2 x (1 - x)
+  $
+  Since $0 <= 2 x (1 - x)$ when $x in (0, 1)$, we can choose $delta = 2\/3$, thus
+  $
+    1 - 3 delta = -1 <= 2 x ( 1- x) quad forall x in (0, 1).
+  $
+
+  A similar argument can be applied for the opposite direction.
+
+  *3.* \
+  $
+    H(x) = nabla (nabla -sum_(i=1)^n log x_i) = nabla (-1/x_1, dots, -1/x_n) =
+    mat(
+      1/x_1^2, 0, 0, dots, 0;
+      0, 1/x_2^2, 0, dots, 0;
+      0, 0, 1/x_3^2, dots, 0;
+      dots.v, dots.v, dots.v, dots.down, dots.v;
+      0, 0, 0, dots, 1/x_n^2;
+      delim: "["
+    )
+  $
+
+  $
+    norm(y - x)_x = (y - x)^T H(x) (y - x) <= delta
+ $
 ]
 
 #pagebreak()
@@ -91,15 +164,60 @@
       line((-3, 0), (3, 0), mark: (end: ">"))
       line((0, -3), (0, 3), mark: (end: ">"))
 
-      rect((-1, -1), (1, 1), stroke: 2pt + blue, fill: blue.transparentize(70%))
+      rect((-1, -1), (1, 1), stroke: 2pt + blue, fill: blue.transparentize(80%))
       line((-0.5, 2.5), (2.5, -0.5), stroke: 2pt + red)
       line((-0.1, 2 + 0.1), (-0.5 - 0.1, 1.5 + 0.1), stroke: 1pt + red, mark: (end: ">"))
+      line((0,0), (1,1), stroke: 1pt + green)
 
-      content((0,0), text(size: 18pt)[$P$])
-      content((2.2, -0.6), text(size: 14pt)[$c$])
+      // content((0,0), text(size: 18pt)[$P$])
+      // content((2.2, -0.6), text(size: 14pt)[$c$])
 
     })
   ]
+
+  The polytope can be given with the following conditions:
+  $
+    x_1 &<= 1; quad
+    -x_1 &<= 1; quad
+    x_2 &<= 1; quad
+    -x_2 &<= 1.
+  $
+
+  From this we have the logarithmic barrier function and it's gradient as follows
+  $
+    F(x) = - log(1 - x_1) - log (1 + x_1) - log(1-x_2) - log(1 + x_2)
+  $
+  $
+    nabla F(x) = mat(
+      1/(1 - x_1) - 1/(1 + x_1);
+      1/(1 - x_2) - 1/(1 + x_2);
+      delim: "[",
+    ).
+  $
+
+  Let $f_t (x) = t (c dot x) + F(x)$, with this we have
+  $
+    nabla f_t (x) = mat(
+      t + 1/(1 - x_1) - 1/(1 + x_1);
+      t + 1/(1 - x_2) - 1/(1 + x_2);
+      delim: "[",
+    ),
+  $
+  and we need this to be the $(0, 0)$ vector for all $t > 0$. Since the two
+  equations are the same we only focus on one of them.
+  $
+    t + 1/(1 - x_1) - 1/(1 + x_1) &= 0 \
+    (1 - x_1^2) t + 1 + x_1 - 1 + x_1 &= 0 \
+    t x_1^2 - 2 x_1 - t &= 0 \
+    x_1 &= (2 plus.minus sqrt(4 - 4 t^2))/(2 t) = (1 plus.minus sqrt(1 - t^2))/t.
+  $
+
+  From these two solutions only the the one with the minus will be inside the
+  polytope. Thus we have
+  $
+    Gamma_c = {(gamma(t), gamma(t)) : t >= 0}, quad " where " quad gamma(t) = (1 - sqrt(1 - t^2))/t.
+  $
+
 ]
 
 #pagebreak()
@@ -112,6 +230,30 @@
 ]
 
 #solution[
+  $
+    nabla F(x) = - sum_(i=1)^m 1/(b_i - a_i dot x) dot (-a_i) = sum_(i=1)^m a_i/(b_i - a_i dot x)
+  $
+
+  $
+    H(x) = nabla^2 F(x) = nabla (sum_(i=1)^m a_i/(b_i - a_i dot x)) =
+  sum_(i=1)^m a_i/(b_i - a_i dot x) dot a_i^T = sum_(i=1)^m (a_i dot a_i^T)/(b_i
+  - a_i dot x).
+  $
+
+  To show that $F$ is strictly convex on the interior of $P$ we need to show that $H(x)$ is positive definite.
+  In other words, that $forall z in RR^n$ we have $z^T H(x) z > 0$.
+  $
+    z^T H(x) z &= z^T = z^T (sum_(i=1)^m (a_i dot a_i^T)/(b_i - a_i dot x)) z = sum_(i=1)^m (z^T a_i dot a_i^T z)/(b_i - a_i dot x) \
+    &= sum_(i=1)^m ((a_i^T z)^T (a_i^T z)) / (b_i - a_i dot x) = sum_(i=1)^m (norm(a_i^T z)^2)/(b_i - a_i dot x) >= 0.
+  $
+
+  Since $x in "int"P$, we have $b_i - a_i dot x >= 0$ for any $i = 1, dots, m$,
+  and the norm of any vector is nonnegative.
+
+  Now we just need to show that for any $z != 0$ we have $z^T H(x) z != 0$.
+  This could only happen if $a_i dot z = 0$ for all $i = 1, dots, m$. However,
+  since the problem specified that $P$ is bounded, this implies that there are at
+  least $n$ linearly independent constraint vectors $a_i$, thus such a $z$ cannot exist.
 ]
 
 #pagebreak()
@@ -119,7 +261,7 @@
 #exercise[
   Let $P = {x in RR^n : a_i dot x <= b_i quad "for" i = 1, dots, m}$ and $x in
   "int"(P)$. For a vector $c in RR^n$, let $c_x = H^(-1)(x) c$, where $H(x)$ is
-  the Hessian of the logarithmic barrier function. Verify that hte points $x -
+  the Hessian of the logarithmic barrier function. Verify that hte point $x -
   c_x \/ norm(c_x)_x$ is in $P$.
 ]
 
