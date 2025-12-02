@@ -17,7 +17,7 @@
 )
 
 #align(center)[
-  #text(blue, size: 25pt)[*Homework 6*] \
+  #text(blue, size: 25pt)[*Homework 7*] \
 
   Toffalini Leonardo
 ]
@@ -67,6 +67,73 @@
 #pagebreak()
 
 #exercise[
+  Let $E(x_0, M) subset.eq RR^2$ be an ellipsoid where
+  $
+    x_0 = (1, 2) "and" M = mat(9, 0; 0, 4).
+  $
+
+  Let $phi(x) = mat(2, 1; 1, 2) x + (3, 5)$. Show that $M$ is positive
+  definite. Write up the ellipsoid $phi(E(x_0, M))$.
+]
+
+#solution[
+  Clearly $M$ is positive definite, as its two leading minors are $9$ and $36$,
+  both of which are positive, thus by Sylvester's theorem $M$ is positive
+  definite.
+
+  By the previous exercise, $phi(E(x_0, M)) = E(A x_0 + b, A M A^T)$ with $A =
+  mat(2, 1; 1, 2)$ and $b = (3, 5)$ if $A$ is inverteble, which indeed it is.
+  Giving us the following
+  $
+    phi(E(x_0, M)) &= E(A x_0 + b, A M A^T) \
+    &= E(mat(2, 1; 1, 2) dot mat(1; 2) + mat(3; 5), A M A^T) \
+    &= E( mat(2 dot 1 + 1 dot 2 + 3; 1 dot 1 + 2 dot 2 + 2), A M A^T) \
+    &= E( mat(7; 7), A M A^T) \
+    &= E( mat(7;7), mat(40, 26; 26, 25)).
+  $
+]
+
+#pagebreak()
+
+#exercise[
+  Let both $B_1$ be the unit ball with the origin as a center and $B_2$ be the
+  unit ball with the point $(1,0)$ as a center in $RR^2$. Let
+  $
+    x_1 = (1, 1), quad x_2 = (2, 2), quad M_1 = mat(2, 0; 0, 1), quad "and" quad M_2 = mat(2, 1; 1, 2).
+  $
+
+  Prove that there exists no affine mapping $phi$ such that $phi(B_1) = E(x_1,
+  M_1)$ and $phi(B_2) = E(x_2, M_2)$.
+]
+
+#solution[
+  Notice that a ball can be defined as an ellipse as follows:
+  $
+    B_1 &= E((0,0), mat(1,0;0,1)) \
+    B_2 &= E((1,0), mat(1,0;0,1)) \
+  $
+
+  Let $phi(x) = A x + b$, where $A in RR^(2 times 2)$ and $b in RR^2$.
+
+  From Exercise 2 we know that
+  $
+    phi(B_1) = phi(E(mat(0;0), mat(1, 0; 0, 1))) = E(A mat(0;0) + b, A mat(1, 0; 0, 1) A^T) = E(b, A A^T),
+  $
+  and likewise
+  $
+    phi(B_2) = E(A mat(1; 0) + b, A A^T).
+  $
+
+  Since the problem asks for $phi(B_1) = E_1$ it means that $A A^T = mat(2, 0;
+    0, 1)$ and because $phi(B_2) = E_2$ it means that $A A^T = mat(2, 1; 1,
+    2)$.
+
+  This is a contradiction as $A$ is some fixed matrix, thus $A A^T$ cannot take two different values.
+]
+
+#pagebreak()
+
+#exercise[
   Let $C = [0, 1] times [0, 1] subset.eq RR^2$ and let $a = (3, 3)$. Find all
   hyperplanes that separates $C$ and $a$.
 ]
@@ -77,7 +144,7 @@
   and $b dot v >= c$.
 
   It is enough to show that a plane $P$ separates the four corners of the
-  square, thus it separates any convex conbination of the corners.
+  square, thus it separates their convex hull.
 
   So we need to find $v in RR^2$ and $c in RR$ such that
   $
