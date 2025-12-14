@@ -1,15 +1,19 @@
-#set text(size: 12pt)
-#set text(font: "New Computer Modern Math")
+#set text(size: 12pt, font: "New Computer Modern Math")
+#set par(justify: true, first-line-indent: 1em)
+#set page(margin: 4em, numbering: "1")
 
 // Title
 #align(center)[
-  #text(size: 1.5em)[= Math projects report]
+  #text(size: 1.2em)[= Algorithmic Trading with \ Reinforcement Learning]
+  #v(0.5em)
+  #text(size: 1.2em)[First semester report]
+
   #v(0.5em)
   #text(size: 1.25em)[Leonardo Toffalini]
   #v(-0.5em)
   #text(size: 1em)[Supervised by András Lukács]
 ]
-#v(3em)
+#v(2em)
 
 #set heading(numbering: "1.1")
 
@@ -20,7 +24,7 @@ the problem at hand and briefly mention some notable achievements.
 
 Consider a modeled financial market wherein the price of a risky asset adheres
 to an adapted process $S_t$, where $t in [0, T]$. The trader may trade at
-finite rates on the risky asset, tough they incur a temporary nonlinear price
+finite rates on the risky asset, though they incur a temporary nonlinear price
 impact as a consequence. The family of feasible strategies available to the trader is
 $
   S(T) := {phi.alt : phi.alt "is a " RR"-valued optional process and" integral_0^T abs(phi.alt) dif u < infinity "a.s."}.
@@ -56,16 +60,18 @@ The objective of our problem is to identify the strategy $phi.alt in cal(A)(T)$
 that realizes maximal expected profits of the riskless asset.
 
 It can be shown that there exists an optimal strategy for any time horizon $T$
-that achieves maximal returns @guasoni2015hedging. It can also be shown that a simple
-contrarian strategy with linear liquidation after $T\/2$ steps achieves
-asymptotically optimal returns, that is of order $T^(H (1 + kappa) + 1)$ @rasonyi_nika.
+that achieves maximal returns @rasonyi_nika. It can also be shown that a
+simple contrarian strategy in the anti persistent case, and a momentum strategy
+in the persistent case with linear liquidation after $T\/2$ steps achieves
+asymptotically optimal returns, that is of order $T^(H (1 + kappa) + 1)$
+@rasonyi_nika, when $kappa -> 1\/(alpha - 1)$.
 
 The goal of this project, and that of my undergraduate thesis, is to compete
 with the analytical results by learning a strategy that compares in its
 expected returns. We will learn such a strategy using reinforcement learning (RL).
 
 = Previous work
-During my undergraduate thesis we have shown that with a standard PPO @ppo algorithm
+During my undergraduate thesis, we showed that with a standard PPO @ppo algorithm
 we were able to outcompete the analytical strategy on expected returns for time
 horizons $T <= 512$ by training a bespoke model for each tested time horizon,
 which is to say that we did not find a general strategy that worked for any
@@ -75,8 +81,8 @@ which we attributed to the credit assignment problem becoming increasingly
 more difficult for longer horizons.
 
 = Current work
-Building on the previous work, the overall reinforcement learning approach remains unchanged and continues to rely on PPO as the core algorithm.
-
+Building on the previous work, the overall reinforcement learning approach remains unchanged and continues to rely on PPO as the core algorithm.\
+\
 The following modifications were introduced:
 - The environment was reimplemented in C using the pufferlib framework
   @suarez2025pufferlib, yielding an approximate three orders of magnitude
@@ -90,8 +96,6 @@ The following modifications were introduced:
   forced liquidation within a given time horizon for each step.
 - The reward function was reformulated to depend on the anticipated liquidation
   cost rather than on the temporal difference in the riskless asset.
-
-#pagebreak()
 
 #bibliography("refs.bib")
 
