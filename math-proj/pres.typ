@@ -49,6 +49,9 @@ $
 $
   X_t^0(phi.alt) := z^0 - integral_0^t phi.alt_u S_u dif u - integral_0^t lambda abs(phi.alt_u)^alpha dif u #flushr("(riskless)")
 $
+$
+   max_(phi.alt in S(t)) EE[X_T^0(phi.alt)]
+$
 
 == Previous work
 #figure[
@@ -56,10 +59,27 @@ $
 ]
 
 == Current work
-- The codebase was rewriteen in C from Python
+- The code base was rewritten in C from Python
 - Liquidation strategy is now a linear schedule
 - Smarter rewards: anticipating liquidation value
 
 == Results
 - Three orders of magnitude speedup (1.5k $=>$ 1.5M SPS)
 - Large-scale hyperparameter search with CARBS
+- So far better performance for fix time horizons
+
+== Example hyperparameter sweep (T = 512)
+#figure[
+  #image("example_sweep.png")
+]
+
+---
+#figure[
+  #image("sweep_gae_lambda_vs_terminal_riskless.png")
+]
+
+
+== Usage of AI tools
+- Perplexity -- Research
+- Cursor -- Programming
+
