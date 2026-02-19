@@ -59,8 +59,10 @@ We cannot use physical methods like radioactive radiation as they would not sati
 == Reconciliation
 We need to redefine what _seemingly random_ means.
 
-"There must not exist a polynomial time algorithm that can differentiate
-between truly random and generated sequences."
+
+"There must not exist a randomized polynomial time algorithm that can
+differentiate between truly random and generated sequences with non-negligible
+advantage."
 
 "There must not exists a polynomial time algorithm that can guess the next bit given the previous bits."
 
@@ -92,7 +94,9 @@ $
   X_(i) = 65539 dot X_(i-1) quad (mod 2^31)
 $
 
-#link("file:///Users/tleo/Downloads/git/school/typsting/kript/randu_planes.gif")
+#link("https://github.com/leonardo-toffalini/typsting/blob/main/kript/randu_planes.gif")
+
+Outputs fall into only 15 planes.
 
 == Park--Miller (1988)
 $
@@ -142,6 +146,8 @@ $
   b_0 a_(n-1) &+ b_1 a_n &+ ... &+ b_(n-1) a_(2-2) &= a_n \
 $
 
+The coefficients can be recovered by solving the linear system.
+
 == Square root generator
 $
   sqrt(5) = 10.overbrace(0011100011011, f(5)) ...
@@ -153,6 +159,9 @@ $
 
 == Problem with square root generator
 Seems random but is still _breakable_ with a sufficiently complicated number theoretic approach.
+
+== Mersenne twister
+asd
 
 
 = Formalism
@@ -201,7 +210,11 @@ guess at random.]
 == Equivalent definition of secure generator
 
 #definition[
-  unpredictable...
+  A generator $g(x) = G_1 G_2 ... G_N$ is said to be unpredictable if
+  $
+    PP(cal(B)(n, G_1 ... G_i) = G_(i+1)) = 1/2 + #NEGL\(n) quad forall i in_R {1, ..., N}
+  $
+  where $x in_R {0,1}^n$.
 ]
 
 #theorem(title: [Yao])[
@@ -226,8 +239,8 @@ guess at random.]
 ]
 
 #remark[
-  If you find a secure generator you have proven
-  $#P != #NP$ and you can claim your \$1M.
+  If you find a secure generator you you can claim your \$1M, since you have
+  proven $#P != #NP$.
 ]
 
 == One-way functions
@@ -239,7 +252,7 @@ guess at random.]
   - $forall cal(A) : {0,1}^* -> {0,1}^*$ RPA and
     $y in_R {0,1}^*$ the following holds:
     $
-      PP(f(cal(A)(f(y))) = f(y)) = #NEGL\(n)
+      PP(f(cal(A)(f(y))) = f(y)) = #NEGL\(n).
     $
 ]
 
@@ -258,7 +271,7 @@ guess at random.]
   generator created from $f$.
 ]
 
-== Construction of Goldreich--Levin
+== Construction of Goldreich--Levin generator
 Choose a seed $(x, p) in_R {0,1}^n times {0,1}^n$
 
 Define $y^((t)) = f^t (x) quad t = 1, ..., N$
@@ -303,9 +316,6 @@ Given $m$ and $x < m$ the output is $m$ and $y = x^2 mod m$.
 
 Try to find $x$ such that $x^2 equiv y quad (mod m)$
 
-== Most commonly used
-Mersenne twister
-
 = Beyond random bits
 == Uniform distribution
 Generate a random number $X ~ U(0,1)$
@@ -323,5 +333,15 @@ $
 This has precision $2^(-n)$.
 
 == Box--Muller transform
-foobar
+Suppose you have $U_1, U_2 ~ U(0,1)$.
+
+Let
+$
+  Z_1 &= sqrt(-2 log U_1) cos(2 pi U_2) \
+  Z_2 &= sqrt(-2 log U_1) sin(2 pi U_2)
+$
+
+Then $Z_1, Z_2$ are independent standard normal variables.
+
+#link("https://upload.wikimedia.org/wikipedia/commons/1/1f/Box-Muller_transform_visualisation.svg")
 
