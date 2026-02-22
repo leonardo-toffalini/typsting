@@ -1,4 +1,3 @@
-#import "@preview/thmbox:0.3.0": *
 #import "@preview/fletcher:0.5.8" as fletcher: diagram, node, edge, shapes
 #import "@preview/cetz:0.4.2": canvas, draw, tree
 
