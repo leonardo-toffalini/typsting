@@ -181,7 +181,14 @@
   $
     b(w, v, v) = integral_Omega (w dot nabla v) dot v = 1/2 integral_Omega w dot nabla (v dot v)
   $
-  By the Gauss--Ostrogradsky theorem we have
+
+  We know that $nabla dot (phi.alt w) = w dot nabla phi.alt + (nabla dot w)
+  phi.alt$. By the Gauss--Ostrogradsky theorem we have
+  $
+    integral_Omega nabla dot F &= integral_(partial Omega) F dot nu flushr((F = phi.alt w)) \
+    integral_Omega nabla dot (phi.alt w) &= integral_(partial Omega) phi.alt w dot nu
+  $
+
   $
     integral_Omega w dot nabla phi.alt &= -integral_Omega (nabla dot w) phi.alt + integral_(partial Omega) phi.alt (w dot nu) flushr((phi.alt = v dot v = abs(v)^2)) \
     integral_Omega w dot nabla abs(v)^2 &= -integral_Omega (nabla dot w) abs(v)^2 + integral_(partial Omega) abs(v)^2 (w dot nu)
