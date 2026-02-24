@@ -36,6 +36,7 @@
 
 // #set heading(numbering: "1.")
 #set heading(numbering: numbly("{1}.", default: "1.1"))
+#set text(size: 20pt)
 
 
 #title-slide()
@@ -74,6 +75,19 @@ advantage."
 )
 
 == Problem with middle square
+
+#figure(
+  image("middle_square_paths_100.png", width: 125%)
+)
+
+---
+
+#figure(
+  image("middle_square_paths_1000.png", width: 125%)
+)
+
+---
+
 - short period
 - often enters a short cycle
 - if middle digits are $0 0 ... 0$ it no longer produces meaningful numbers
@@ -89,7 +103,9 @@ $
   X_i = a X_(i-1) + b quad (mod m)
 $
 
-== RANDU (1960-1970)
+#v(2em)
+
+*RANDU (1960-1970)*
 $
   X_(i) = 65539 dot X_(i-1) quad (mod 2^31)
 $
@@ -107,7 +123,8 @@ $
   "Give me something I can understand, implement and port... it needn't be state-of-the-art, just make sure it's reasonably good and efficient."
 ]
 
-== Problem with LCG
+*Problem with LCGs*
+
 The elements of LCG sequences can be guessed in polynomial time with polynomial
 many known elements of the sequence with a sufficiently complicated algorithm.
 
@@ -116,17 +133,13 @@ $
   a_k = f(a_(k-1), a_(k-2), ..., a_(k-n))
 $
 
-== Linear shift register
+*Linear shift register*
 
 $
-  f(x_0, ..., x_(n-1)) = b_0 x_0 + b_1 x_1 + ... + b_(n-1) x_(n-1)
+  f(x_0, ..., x_(n-1)) = b_0 x_0 + b_1 x_1 + ... + b_(n-1) x_(n-1) flushr((b_i in {0,1}))
 $
 
-$
-  b_i in {0,1}
-$
-
-== Xorshift
+*Xorshift*
 $
   y_1 &= x_n xor (x_n << 13) \
   y_2 &= y_1 xor (y_1 >> 17) \
@@ -139,6 +152,9 @@ $
 $
 
 == Problem with shift registers
+The coefficients can be recovered by solving the following linear system.
+
+#v(2em)
 $
   b_0 a_0 &+ b_1 a_1 &+ ... &+ b_(n-1) a_(n-1) &= a_n \
   b_0 a_1 &+ b_1 a_2 &+ ... &+ b_(n-1) a_(n) &= a_n \
@@ -146,7 +162,6 @@ $
   b_0 a_(n-1) &+ b_1 a_n &+ ... &+ b_(n-1) a_(2-2) &= a_n \
 $
 
-The coefficients can be recovered by solving the linear system.
 
 == Square root generator
 $
@@ -157,12 +172,28 @@ $
   f(a) = sqrt(a) - floor(sqrt(a))
 $
 
-== Problem with square root generator
+*Problem with square root generator*
+
 Seems random but is still _breakable_ with a sufficiently complicated number theoretic approach.
 
-== Mersenne twister
-asd
+== Mersenne twister (1997)
+$
+  x_(k+n) := x_(k+m) xor ((x_k^u | x_(k+1)^l)A) flushr((k=0, 1, 2, ...))
+$
+$
+  x A = cases(
+    x >> 1 quad &x_0 = 0,
+    (x >> 1) xor a quad &x_0 = 1
+  )
+$
 
+Then temper with the output 
+$
+  y &= x xor ((x >> u) \& d) flushr((u, d) = (11, "FFFFFFFF"_16)) \
+  y &= y xor ((y << s) \& b) flushr((s, b) = (7, 9"D"2"C"5680_16) ) \
+  y &= y xor ((y << t) \& c) flushr((t, c) = (15, "EFC"60000_16) ) \
+  z &= y xor (y >> l)        flushr(l = 18)
+$
 
 = Formalism
 == Definitions
@@ -179,15 +210,11 @@ asd
   $c$.
 ]
 
----
-
 #definition[
   Let $cal(A)$ be a randomized polynomial time algorithm that for each $z in
   {0, 1}^*$ input it outputs a bit $cal(A)(z) in {0,1}$ meaning the input was
   random ($1$) or not ($0$). $cal(A)$ is called a test.
 ]
-
----
 
 #definition[
   For a fixed $n >= 1$ chose uniformly at random $x$ from ${0, 1}^n$ and $y$
@@ -195,8 +222,6 @@ asd
   $G(x)$ or $y$ as input to $cal(A)$. We say that $cal(A)$ was a successful
   test if it correctly determined whether it had a random input or not.
 ]
-
----
 
 #definition[
   We say that a generator $G$ is secure if for all randomized polynomial time
