@@ -46,24 +46,34 @@
 
 = Intuition
 == What we expect from a PRNG
-1. Given a short input (seed) it produces a long _seemingly random_ sequence.
-2. Generation should be really fast.
+#pause
+1. Given a short input (seed) it produces a long _seemingly random_ sequence. #pause
+
+2. Generation should be really fast. #pause
+
 3. The sequence must be reproducible just from the seed.
 
-== The sad truth
-What does _seemingly random_ mean?
+#v(4em)
+#pause
+*The sad truth*
 
-We cannot use Kolmogorov complexity to measure randomness, because that would not satisfy 1.
+- What does _seemingly random_ mean? #pause
 
-We cannot use physical methods like radioactive radiation as they would not satisfy 2. and 3.
+- We cannot use Kolmogorov complexity to measure randomness, because that would not satisfy 1. #pause
+
+- We cannot use physical methods like radioactive radiation as they would not satisfy 2. and 3.
 
 == Reconciliation
-We need to redefine what _seemingly random_ means.
+We need to redefine what _seemingly random_ means. #pause
 
+#v(2em)
+*Possible definitions:* #pause
 
 "There must not exist a randomized polynomial time algorithm that can
-differentiate between truly random and generated sequences with non-negligible
-advantage."
+differentiate between truly random and generated sequences with _non-negligible
+advantage_." #pause
+
+#v(2em)
 
 "There must not exists a polynomial time algorithm that can guess the next bit given the previous bits."
 
@@ -83,14 +93,21 @@ advantage."
 ---
 
 #figure(
-  image("middle_square_paths_1000.png", width: 125%)
+  image("middle_square_paths_10000.png", width: 125%)
 )
 
 ---
 
-- short period
-- often enters a short cycle
-- if middle digits are $0 0 ... 0$ it no longer produces meaningful numbers
+- After a couple iterations it is no longer random. \
+  For $n=2$ after $approx 10$ iterations, for $n=4$ after $approx 100$ iterations it no longer produces meaningful numbers.
+#pause
+
+- Often enters a short cycle. \
+  For $n=2$ there are $4$ fixed points $0, 10, 50, 60$ and a two number cycle $24 <-> 57$.
+#pause
+
+- If middle digits are $0 0 ... 0$ it no longer produces meaningful numbers.
+#pause
 
 #set quote(block: true)
 #quote(attribution: [John von Neumann])[
@@ -104,15 +121,16 @@ $
 $
 
 #v(2em)
-
+#pause
 *RANDU (1960-1970)*
 $
   X_(i) = 65539 dot X_(i-1) quad (mod 2^31)
 $
 
+#pause
 #link("https://github.com/leonardo-toffalini/typsting/blob/main/kript/randu_planes.gif")
 
-Outputs fall into only 15 planes.
+Outputs fall into only 15 planes during the spectral test.
 
 == Park--Miller (1988)
 $
@@ -123,9 +141,12 @@ $
   "Give me something I can understand, implement and port... it needn't be state-of-the-art, just make sure it's reasonably good and efficient."
 ]
 
+#pause
+#v(4em)
+
 *Problem with LCGs*
 
-The elements of LCG sequences can be guessed in polynomial time with polynomial
+It can be proved that the elements of LCG sequences can be guessed in polynomial time with polynomial
 many known elements of the sequence with a sufficiently complicated algorithm.
 
 == Shift register (1965)
@@ -133,12 +154,14 @@ $
   a_k = f(a_(k-1), a_(k-2), ..., a_(k-n))
 $
 
+#pause
 *Linear shift register*
 
 $
   f(x_0, ..., x_(n-1)) = b_0 x_0 + b_1 x_1 + ... + b_(n-1) x_(n-1) flushr((b_i in {0,1}))
 $
 
+#pause
 *Xorshift*
 $
   y_1 &= x_n xor (x_n << 13) \
@@ -146,6 +169,7 @@ $
   x_(n+1) &= x_2 xor (x_2 << 5)
 $
 
+#pause
 Alternatively, in $FF^32_2$
 $
   x_(n+1) = (1 xor 2^5) (1 xor 2^(32-17)) (1 xor 2^13) x_n
@@ -164,36 +188,55 @@ $
 
 
 == Square root generator
+Example:
 $
   sqrt(5) = 10.overbrace(0011100011011, f(5)) ...
 $
 
+For a seed $a$ we can define it as
 $
   f(a) = sqrt(a) - floor(sqrt(a))
 $
 
+#pause
 *Problem with square root generator*
 
 Seems random but is still _breakable_ with a sufficiently complicated number theoretic approach.
 
 == Mersenne twister (1997)
+- Your programming language probably uses this one. #pause
+
+- Still just a shift register, but with a few tricks. #pause
+
+- Keep a state from which we recursively generate. #pause
+
+- The recurrence is offset. #pause
+
+- Before returning the output temper with it.
+
+---
+
 $
   x_(k+n) := x_(k+m) xor ((x_k^u | x_(k+1)^l)A) flushr((k=0, 1, 2, ...))
 $
+#pause
 $
   x A = cases(
     x >> 1 quad &x_0 = 0,
     (x >> 1) xor a quad &x_0 = 1
-  )
+  ) flushr((a = 9908"B"0"DF"_16))
 $
+#pause
 
 Then temper with the output 
 $
   y &= x xor ((x >> u) \& d) flushr((u, d) = (11, "FFFFFFFF"_16)) \
   y &= y xor ((y << s) \& b) flushr((s, b) = (7, 9"D"2"C"5680_16) ) \
   y &= y xor ((y << t) \& c) flushr((t, c) = (15, "EFC"60000_16) ) \
-  z &= y xor (y >> l)        flushr(l = 18)
+  z &= y xor (y >> l)        flushr((l = 18))
 $
+
+Output $z$.
 
 = Formalism
 == Definitions
@@ -246,6 +289,12 @@ guess at random.]
   A generator $G$ is secure if and only if it is unpredictable.
 ]
 
+#remark[
+  Clearly, if we reverse a secure generators output, then we get another secure
+  generator, since any algorithm that could differentiate the original output
+  can differentiate the reversed output by first reversing it themselves.
+]
+
 == How hard could it be?
 
 #proposition[
@@ -264,7 +313,7 @@ guess at random.]
 ]
 
 #remark[
-  If you find a secure generator you you can claim your \$1M, since you have
+  If you find a secure generator you can claim your \$1M, since you have
   proven $#P != #NP$.
 ]
 
@@ -292,34 +341,38 @@ guess at random.]
 ]
 
 #theorem(title: [Goldreich--Levin])[
-  If $f$ is a one-way permutation then there is a secure
-  generator created from $f$.
+  If $f$ is a one-way permutation, then we can construct a secure generator from $f$.
 ]
 
 == Construction of Goldreich--Levin generator
-Choose a seed $(x, p) in_R {0,1}^n times {0,1}^n$
+Choose a seed $(x, p) in_R {0,1}^n times {0,1}^n$. #pause
 
-Define $y^((t)) = f^t (x) quad t = 1, ..., N$
+Compute $y^((t)) = f^t (x) + f(f^(t-1)(x))$ for all $t = 1, ..., N$. #pause
 
-Output $g(x, p) = overline(G_1 G_2 ... G_N)$, where $G_t = p dot y^((t))$
+Output $g(x, p) = G_1 dot G_N$, where $G_t = p dot y^((t))$. #pause
 
 Where
 $
-  (a_i)_(i=1)^n dot (b_i)_(i=1)^n := xor.big_(i = 1)^n a_i b_i
-$
+  (a_i)_(i=1)^n dot (b_i)_(i=1)^n := xor.big_(i = 1)^n a_i b_i = a_1 b_1 xor a_2 b_2 xor ... xor a_n b_n.
+$ #pause
 
-Even if someone knows $p$ and $y^((k))$ they cannot predict
+*Why this should work*
+
+Let $y = f^i (x)$ and $z = f^(i+1) (x)$, since $f$ is a one-way function, no
+one can compute $y$ from $z$ with non-negligible advantage. #pause
+
+In essence, even if someone knows $p$ and $z$ they cannot compute
 $
-  G_(k+1) = p dot f(y^((k)))
+  G_i = p dot f^(-1)(z).
 $
 
 = One-way function candidates
 == Factorization
 Let $p$ and $q$ be two $n$ long prime numbers.
 
-Let $f(n, p, q) = p q$
+Let $f(n, p, q) = p q$.
 
-Given $f(n, p, q)$ try to guess $p$ and $q$.
+Given $f(n, p, q)$ try to guess $p$ and $q$. #pause
 
 #remark[
   Shor's algorithm shows that this function is reversible in polynomial time
@@ -330,7 +383,7 @@ Given $f(n, p, q)$ try to guess $p$ and $q$.
 Given a prime $p$ and a primitive root $g$ and $k < p$, let $y = g^k mod p$ the
 output is $(p, g, y)$.
 
-Try to guess $k$, that is the discrete logarithm of $y$ modulo $p$.
+Try to guess $k$, that is the discrete logarithm of $y$ modulo $p$. #pause
 
 #remark[
   Shor's algorithm solves this problem too.

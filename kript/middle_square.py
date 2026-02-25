@@ -12,7 +12,7 @@ def middle_square(n, digits=2):
 
 iterations = 200
 digits = 4
-seeds = list(range(100, 1000))
+seeds = list(range(1000, 10000))
 
 plt.figure(figsize=(24, 12))
 
@@ -35,5 +35,5 @@ plt.xlabel("Iteration")
 plt.ylabel("Value")
 plt.title("Middle-Square RNG Paths")
 plt.grid(True)
-plt.savefig("middle_square_paths_1000")
+plt.savefig("middle_square_paths_10000")
 plt.show()
