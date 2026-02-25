@@ -62,6 +62,11 @@ What makes RL different?
 - Recommendation systems
 - Many more...
 
+== RL loop
+#figure(
+  image("huggingface_rl_loop.jpg")
+)
+
 = Setting the scene
 == Markov decision processes
 #definition[
@@ -115,6 +120,7 @@ What makes RL different?
       circle((3, 0), radius: full_radius, fill: black)
       line((3,0), (6-0.25, 2-0.1))
       line((3,0), (6-0.25, -2+0.1))
+      content((3, 0.5), text(size: 18pt)[$a$])
 
       circle((6,2), radius: hollow_radius)
       circle((6,-2), radius: hollow_radius)
@@ -164,8 +170,7 @@ What makes RL different?
 #remark[
   The next action depends _only_ on the current state and nothing else.
 
-  The policy may be deterministic if $pi(a_i | s) = 1$ for some $i$ and $pi(a_j
-    | s) = 0$ for any other $j != i$.
+  The policy may be deterministic if $pi(a_i|s) = 1$ for some $i$ and $pi(a_j|s) = 0$ for any other $j != i$.
 ]
 
 == Value function
