@@ -24,7 +24,7 @@
 #show: university-theme.with(
   aspect-ratio: "16-9",
   // align: horizon,
-  config-common(handout: true),
+  config-common(handout: false),
   // config-common(show-notes-on-second-screen: right),
   config-common(frozen-counters: (theorem-counter,)),  // freeze theorem counter for animation
   config-info(
@@ -180,10 +180,10 @@ The coefficients can be recovered by solving the following linear system.
 
 #v(2em)
 $
-  b_0 a_0 &+ b_1 a_1 &+ ... &+ b_(n-1) a_(n-1) &= a_n \
-  b_0 a_1 &+ b_1 a_2 &+ ... &+ b_(n-1) a_(n) &= a_n \
+  b_0 a_0 &+ b_1 a_1 &+ ... &+ b_(n-1) a_(n-1) &= a_(n) \
+  b_0 a_1 &+ b_1 a_2 &+ ... &+ b_(n-1) a_(n) &= a_(n+1) \
   &dots.v &dots.v \
-  b_0 a_(n-1) &+ b_1 a_n &+ ... &+ b_(n-1) a_(2-2) &= a_n \
+  b_0 a_(n-1) &+ b_1 a_n &+ ... &+ b_(n-1) a_(2-2) &= a_(2 n - 1) \
 $
 
 
