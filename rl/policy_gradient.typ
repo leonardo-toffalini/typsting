@@ -37,7 +37,6 @@
 #set heading(numbering: numbly("{1}.", default: "1.1"))
 #set text(size: 24pt)
 
-
 #title-slide()
 
 == Outline <touying:hidden>
@@ -204,8 +203,7 @@ $
 == Log derivative trick
 With the reverse application of the chain rule we can notice the following
 $
-  nabla_theta log pi(a|s) &= (nabla_theta pi(a|s))/(pi_theta (a|s)) \
-  nabla_theta pi(a|s) &= pi_theta (a|s) nabla_theta log pi(a|s).
+  nabla_theta log pi(a|s) &= (nabla_theta pi(a|s))/(pi_theta (a|s)).
 $
 
 Applying this little trick in the formula for the gradient of the objective
@@ -216,21 +214,72 @@ $
 *Remark:* Often the policy gradient theorem is stated in this form, since this is
 the form that is used in practice.
 
----
+== REINFORCE
+*Problem:* In the previous formula to calculate the gradient of the objective
+function we need to know the action-value function $q_pi$, instead we want to
+estimate it as follows
 
 $
   nabla_theta J(theta) &= EE_pi [q_pi (s, a) nabla_theta log pi(a|s)] \
-  nabla_theta J(theta) &= EE_pi [EE_pi [G_t | S_t = s, A_t = a] dot nabla_theta log pi(a|s)] \
+  nabla_theta J(theta) &= EE_pi [EE_pi [G_t|S_t = s, A_t = a] dot nabla_theta log pi(a|s)] \
   nabla_theta J(theta) &= EE_pi [G_t dot nabla_theta log pi (a|s)]
 $
 
 $==>$ REINFORCE
 
+*Remark:* We will implement this in the practice.
+
 == Baselines
-show why they work: gradient of a function only dependent on the state is zero thus it does not change the policy gradient theorem
+By definition
+$
+  q_pi (s, a) = EE[G_t|S_t=s, A_t=a],
+$
+that is the sampled $G_t$ is an unbiased estimator for $q_pi$.
+
+*Problem:* What about the variance of the sample?
+
+What if instead of $q_pi (s,a)$ we use $q_pi (s, a) - b(s)$  in the policy gradient theorem?
+$
+  nabla_theta J(theta) prop^? sum_(s in cal(S)) d^pi (s) sum_(a in cal(A)) (q_pi (s, a) - b(s)) nabla_theta pi_theta (a|s)
+$
+
+---
+
+$
+  sum_(s in cal(S)) d^pi (s) sum_(a in cal(A)) (q_pi (s, a) - b(s)) nabla_theta pi_theta (a|s) = \
+  = sum_(s in cal(S)) d^pi (s) sum_(a in cal(A)) q_pi (s, a) nabla_theta pi_theta (a|s) -
+  sum_(s in cal(S)) d^pi (s) sum_(a in cal(A)) b(s) nabla_theta pi_theta (a|s)
+$
+
+$
+  sum_(a in cal(A)) b(s) nabla_theta pi_theta (a|s) &= b(s) nabla_theta sum_(a in cal(A)) pi_theta (a|s) \
+  &= b(s) nabla_theta 1 = b(s) dot 0 = 0
+$
+
+$
+  ==> nabla_theta J(theta) prop^checkmark sum_(s in cal(S)) d^pi (s) sum_(a in cal(A)) (q_pi (s, a) - b(s)) nabla_theta pi_theta (a|s)
+$
+
 
 == Advantage Actor Critic
-use the state-value function as the baseline $==>$ advantage function
+
+*Question:* What should $b(s)$ be? \
+Have we seen a function before that depends
+only on the current state?
+
+Lets use $v_pi (s)$ as the baseline. With it we will have $q_pi (s, a) - v_pi (s)$ in the policy gradient theorem, this is called the _advantage_
+$
+  A(s, a) := q_pi (s, a) - v_pi (s).
+$
+
+*Remark:* Informally speaking, the advantage measures how much better an action
+$a$ is with respect to how good the current state $s$ is.
+
+*Problem:* Do we need to estimate both $q_pi$ and $v_pi$?
+
+---
+
+
 
 = PPO
 == Motivation
