@@ -275,11 +275,58 @@ $
 *Remark:* Informally speaking, the advantage measures how much better an action
 $a$ is with respect to how good the current state $s$ is.
 
-*Problem:* Do we need to estimate both $q_pi$ and $v_pi$?
+*Problem:* Do we need to estimate both $q_pi$ and $v_pi$? \
+$==>$ Not necessarily!
 
 ---
 
+$
+  q_pi (s, a) &:= EE_pi [G_t|S_t=s, A_t = a] \
+  &= EE_pi [R_t + gamma v_pi (S_(t+1))|S_t=s, A_t = a]
+$
 
+$
+  ==> A(s, a) = EE_pi [R_t + gamma v_pi(S_(t+1))|S_t = s, A_t = a] - v_pi (s)
+$
+
+Let us define the temporal difference (TD) error
+$
+  delta_pi := R_t + gamma v_pi (S_(t+1)) - v_pi (S_t).
+$
+
+---
+
+With the TD error we get the following reformulation for the advantage
+$
+  EE_pi [delta_pi|S_t = s, A_t = a] &= EE_pi [R_t + gamma v_pi (S_(t+1)) - v_pi (S_t)|S_t = s, A_t = a] \
+  &= EE_pi [R_t + gamma v_pi (S_(t+1))|S_t = s, A_t = a] - v_pi (s) \
+  &= q_pi (s, a) - v_pi (s) \
+  &:= A(s, a).
+$
+
+The previous means that the TD error is an unbiased estimator for the
+advantage. With this said, we can give the formula for the gradient of the
+objective yet again
+$
+  nabla J(theta) = EE_pi [nabla log pi(a|s) delta_pi].
+$
+
+---
+Having established the reformulation of the gradient step only in terms of the
+state-value function it is sufficient to estimate only that.
+
+*Problem:* How do we estimate the state-value function?
+
+$==>$ Homework for the curious.
+
+*Problem:* The TD error is an unbiased estimator for the advantage _only if_ we
+have access to the true value function $v_pi$, but we only have an estimate of
+that too: $hat(v)_pi$.
+
+$==>$ If $hat(v)_pi$ has high bias then so will $hat(A)(s, a)$.
+
+== Generalized advantage estimator
+foobar
 
 = PPO
 == Motivation
