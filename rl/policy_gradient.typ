@@ -325,8 +325,138 @@ that too: $hat(v)_pi$.
 
 $==>$ If $hat(v)_pi$ has high bias then so will $hat(A)(s, a)$.
 
+---
+
+#figure(
+  align(center)[
+    #cetz.canvas({
+      import cetz.draw: *
+      let cartesian(a, b) = {
+        let result = ()
+
+        for x in a {
+          for y in b {
+            result.push((x, y))
+          }
+        }
+
+        result
+      }
+
+      let input_neurons_policy = ((-1, 0.5), (-1, -0.5),)
+      let inner_layer_policy = ((0, 1), (0, 0), (0, -1))
+      let output_neurons_policy = ((1, 0),)
+
+      let offset = 5
+      let input_neurons_critic = ((-1, 0.5 - offset), (-1, -0.5 - offset),)
+      let inner_layer_critic = ((0, 1 - offset), (0, 0-offset), (0, -1-offset))
+      let output_neurons_critic = ((1, 0-offset),)
+
+      rect((-3.5, -2.25),           (3.5, 2.5), fill: purple.transparentize(70%))
+      rect((-3, -1.5),              (3, 1.5))
+      rect((-3.5, -2.25 - offset),  (3.5, 2.5-offset), fill: red.transparentize(70%))
+      rect((-3, -1.5-offset),       (3, 1.5-offset))
+      rect((-3.5, -1 - 2 * offset), (3.5, 2.0 - 2 * offset), fill: yellow.transparentize(70%))
+
+      for (left_pos, right_pos) in cartesian(input_neurons_policy, inner_layer_policy) {
+        line(left_pos, right_pos, stroke: gray)
+      }
+      for (left_pos, right_pos) in cartesian(inner_layer_policy, output_neurons_policy) {
+        line(left_pos, right_pos, stroke: gray)
+      }
+
+      for pos in input_neurons_policy {
+        circle(pos, radius: 0.25, fill: green.mix(white))
+      }
+      for pos in inner_layer_policy {
+        circle(pos, radius: 0.25, fill: white)
+      }
+      for pos in output_neurons_policy {
+        circle(pos, radius: 0.25, fill: blue.mix(white))
+      }
+
+      for (left_pos, right_pos) in cartesian(input_neurons_critic, inner_layer_critic) {
+        line(left_pos, right_pos, stroke: gray)
+      }
+      for (left_pos, right_pos) in cartesian(inner_layer_critic, output_neurons_critic) {
+        line(left_pos, right_pos, stroke: gray)
+      }
+
+      for pos in input_neurons_critic {
+        circle(pos, radius: 0.25, fill: green.mix(white))
+      }
+      for pos in inner_layer_critic {
+        circle(pos, radius: 0.25, fill: white)
+      }
+      for pos in output_neurons_critic {
+        circle(pos, radius: 0.25, fill: orange.mix(white))
+      }
+
+      content((0, 2.0), text(size: 20pt)[Actor])
+      content((0, -1.9), text(size: 16pt)[policy])
+      content((0, 2.0-offset), text(size: 20pt)[Critic])
+      content((0, -1.9-offset), text(size: 16pt)[value function])
+      content((0, 0.5-2*offset), text(size: 20pt)[Environment])
+
+      // action
+      line((3, 0), (10, 0), (10, 0.5 -2 * offset), (3.5, 0.5 - 2 * offset), mark: (end: ">"))
+      circle((5.5, 1.0 - 2 * offset), radius: (1, 0.5), fill: blue.mix(white), stroke: none)
+      content((5.5, 1.0 - 2 * offset), text(size: 16pt)[action])
+
+      // obs
+      line((-3.5, 0.5 - 2 * offset), (-10, 0.5 - 2 * offset), (-10, 0), (-3, 0), mark: (end: ">"))
+      line((-3.5, 0.5 - 2 * offset), (-10, 0.5 - 2 * offset), (-10, -offset), (-3, -offset), mark: (end: ">"))
+
+      circle((-5.5,  0.5 - 0 * offset), radius: (1, 0.5), fill: green.mix(white), stroke: none)
+      content((-5.5, 0.5 - 0 * offset), text(size: 16pt)[obs])
+      circle((-5.5,  0.5 - 1 * offset), radius: (1, 0.5), fill: green.mix(white), stroke: none)
+      content((-5.5, 0.5 - 1 * offset), text(size: 16pt)[obs])
+
+      // reward
+      line((-3.5, 1.0 - 2 * offset), (-6.5, 1.0 - 2 * offset), (-6.5, -0.5-offset), (-3.5, -0.5-offset), mark: (end: ">"))
+      circle(( -5.0, 1.5-2*offset), radius: (1, 0.5), fill: eastern.mix(white), stroke: none)
+      content((-5.0, 1.5-2*offset), text(size: 16pt)[reward])
+
+      // TD error
+      line((3.5, -offset), (6.5, -offset), (6.5, -0.5), (3.5, -0.5), mark: (end: ">"))
+      circle((5.0, 0.5-offset), radius: (1, 0.5), fill: orange.mix(white), stroke: none)
+      content((5.0, 0.5-offset), text(size: 16pt)[TD error])
+
+
+    })
+  ]
+)
+
 == Generalized advantage estimator
-foobar
+The advantage estimate had the issue that if we estimate $hat(v)_pi$ then the
+bias of that estimate will propagate to the advantage estimate $hat(A)$. \
+$==>$ We can reduce this bias by taking more steps as follows
+$
+  hat(A)_t^((k)) &:= sum_(l=0)^(k-1) gamma^l delta_(t+l) \
+  &= -hat(v)_pi (S_t) + R_t + gamma R_(t+1) + gamma^2 R_(t+2) + ... + gamma^k hat(v)_pi (S_(t+k)).
+$
+
+We can see that the contribution of $hat(v)_pi$ is discounted by a factor of
+$gamma^k$, thus the bias will be reduced.
+
+*Problem:* If we take many steps then the variance of the estimate will
+increase. How do we find a balance between variance and bias?
+
+---
+$==>$ Take an exponentially-weighted average of the $k$-step estimators:
+$
+  hat(A)_t^("GAE"(gamma, lambda)) := (1 - lambda) (hat(A)_t^((1)) + lambda hat(A)_t^((2)) + lambda^2 hat(A)_t^((3)) + ... )
+$
+
+#proposition[
+  $
+    hat(A)_t^("GAE"(gamma, lambda)) = sum_(l=0)^oo (gamma lambda)^l delta_(t+l)
+  $
+]
+
+#proof[
+  Write up the definition, collect terms, collapse the geometric series.
+]
 
 = PPO
 == Motivation
