@@ -40,13 +40,15 @@
 #title-slide()
 
 == Outline <touying:hidden>
-#components.adaptive-columns(outline(title: none, depth: 1))
+#components.adaptive-columns(outline(title: none, depth: 2))
 
 = Policy gradient methods
 == Problems with value based methods
-- value iteration requires transition probabilities
-- q-learning computes max over action space
-- what to do for huge/continuous action spaces?
+- Value iteration requires transition probabilities.
+
+- Q-learning computes max over action space.
+
+- What to do for huge/continuous action spaces?
 
 == Value based vs policy based methods
 #figure(
@@ -54,10 +56,10 @@
     #cetz.canvas({
       import cetz.draw: *
 
-      circle((-3, 0), radius: 6)
-      circle((3, 0), radius: 6)
+      circle((-3, 0), radius: 6, stroke: red)
+      circle((3, 0), radius: 6, stroke: blue)
 
-      content((-8, 4), text(size: 26pt)[*Value function*])
+      content((-8, 4), text(red, size: 26pt)[*Value function*])
       content((8, 4), text(size: 26pt)[*Policy*])
 
       content((0, -1),  text(size: 22pt)[*Actor Critic*])
@@ -71,22 +73,25 @@
 
 - Value based:
   - learnt value function
+
   - implicit policy
 
 - Policy based:
   - no value function
+
   - learnt policy
 
 - Actor Critic:
   - learnt value function
+
   - learnt policy
 
 == Parametric policy
-We can say that a policy depends on a set of parameters $theta$
+- We can say that a policy depends on a set of parameters $theta$.
 
-This could be the weights and biases of a neural net
+- This could be the weights and biases of a neural net.
 
-We want the policy to be diff'able wrt the parameters
+- We want the policy to be differentiable with respect to the parameters.
 
 #figure(
   align(center)[
@@ -184,7 +189,7 @@ where $d^(pi_theta) (s)$ is the stationary distribution of the Markov chain for 
 ]
 
 #proof[
-  maybe
+  See #link("http://www.incompleteideas.net/book/RLbook2020.pdf", "Sutton-Barto RL bible") chapter 13.2.
 ]
 
 ---
@@ -222,10 +227,10 @@ estimate it as follows
 $
   nabla_theta J(theta) &= EE_pi [q_pi (s, a) nabla_theta log pi(a|s)] \
   nabla_theta J(theta) &= EE_pi [EE_pi [G_t|S_t = s, A_t = a] dot nabla_theta log pi(a|s)] \
-  nabla_theta J(theta) &= EE_pi [G_t dot nabla_theta log pi (a|s)]
+  nabla_theta J(theta) &= EE_pi [G_t dot nabla_theta log pi (a|s)].
 $
 
-$==>$ REINFORCE
+$==>$ *REINFORCE*
 
 *Remark:* We will implement this in the practice.
 
@@ -245,19 +250,30 @@ $
 
 ---
 
+Split the formula
 $
   sum_(s in cal(S)) d^pi (s) sum_(a in cal(A)) (q_pi (s, a) - b(s)) nabla_theta pi_theta (a|s) = \
   = sum_(s in cal(S)) d^pi (s) sum_(a in cal(A)) q_pi (s, a) nabla_theta pi_theta (a|s) -
-  sum_(s in cal(S)) d^pi (s) sum_(a in cal(A)) b(s) nabla_theta pi_theta (a|s)
+  sum_(s in cal(S)) d^pi (s) sum_(a in cal(A)) b(s) nabla_theta pi_theta (a|s).
 $
 
+The latter part vanishes
 $
   sum_(a in cal(A)) b(s) nabla_theta pi_theta (a|s) &= b(s) nabla_theta sum_(a in cal(A)) pi_theta (a|s) \
-  &= b(s) nabla_theta 1 = b(s) dot 0 = 0
+  &= b(s) nabla_theta 1 = b(s) dot 0 = 0.
 $
 
+---
+
+With this we can see that 
 $
-  ==> nabla_theta J(theta) prop^checkmark sum_(s in cal(S)) d^pi (s) sum_(a in cal(A)) (q_pi (s, a) - b(s)) nabla_theta pi_theta (a|s)
+  sum_(s in cal(S)) d^pi (s) sum_(a in cal(A)) (q_pi (s, a) - b(s)) nabla_theta pi_theta (a|s) = \
+  sum_(s in cal(S)) d^pi (s) sum_(a in cal(A)) q_pi (s, a) nabla_theta pi_theta (a|s).
+$
+
+So the policy gradient theorem is true with the baseline too
+$
+  ==> nabla_theta J(theta) prop^checkmark sum_(s in cal(S)) d^pi (s) sum_(a in cal(A)) (q_pi (s, a) - b(s)) nabla_theta pi_theta (a|s).
 $
 
 
@@ -280,16 +296,18 @@ $==>$ Not necessarily!
 
 ---
 
+We can write up the definition of $q_pi$ and unroll a half step of the Bellman
+equation
 $
   q_pi (s, a) &:= EE_pi [G_t|S_t=s, A_t = a] \
-  &= EE_pi [R_t + gamma v_pi (S_(t+1))|S_t=s, A_t = a]
+  &= EE_pi [R_t + gamma v_pi (S_(t+1))|S_t=s, A_t = a].
 $
 
 $
   ==> A(s, a) = EE_pi [R_t + gamma v_pi(S_(t+1))|S_t = s, A_t = a] - v_pi (s)
 $
 
-Let us define the temporal difference (TD) error
+Let us define the _temporal difference (TD) error_
 $
   delta_pi := R_t + gamma v_pi (S_(t+1)) - v_pi (S_t).
 $
@@ -457,17 +475,4 @@ $
 #proof[
   Write up the definition, collect terms, collapse the geometric series.
 ]
-
-= PPO
-== Motivation
-foobar
-
-== Loss function of PPO
-maybe
-
-== Generalized advantage estimate
-maybe
-
-== Onto the practice session 
-Lets see REINFORCE and A2C
 

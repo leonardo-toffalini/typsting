@@ -47,24 +47,77 @@
 == Characteristics of RL
 What makes RL different?
 - Not supervised (learning from labeled data)
+
 - Not unsupervised (learning patterns in unlabeled data)
+
 - Only _reward_ signal
+
 - Feedback may be delayed
+
 - Heavily time dependent
+
 - The agent has influence over future data
 
 == Examples of RL
 - Robotics
+
 - Video games
+
 - Self-driving
+
 - Finance
+
 - Natural language processing (recently)
+
 - Recommendation systems
+
 - Many more...
 
 == RL loop
+// #figure(
+//   image("huggingface_rl_loop.jpg")
+// )
+//
+// ---
+
 #figure(
-  image("huggingface_rl_loop.jpg")
+  align(center)[
+    #cetz.canvas({
+      import cetz.draw: *
+
+      let offset = 8
+
+      rect((-4, -1), (4,1), fill: purple.transparentize(70%), radius: 40%)
+      rect((-4, -1 - offset), (4, 1-offset), fill: yellow.transparentize(70%), radius: 40%)
+      content((0, 0), text(size: 26pt)[Agent])
+      content((0, -offset), text(size: 26pt)[Environment])
+
+      line((-4, -offset + 0.25), (-6, -offset + 0.25), mark: (end: ">"))
+      line((-4, -offset - 0.25), (-6, -offset - 0.25), mark: (end: ">"))
+
+      line((-6-0.125, -offset - 0.75), (-6-0.125, -offset + 0.75))
+      line((-6 - 0.25, -offset + 0.25), (-12+0.25, -offset + 0.25), (-12+0.25, 0 - 0.25), (-4, 0 - 0.25), mark: (end: ">"))
+      line((-6 - 0.25, -offset - 0.25), (-12-0.25, -offset - 0.25), (-12-0.25, 0 + 0.25), (-4, 0 + 0.25), mark: (end: ">"))
+      line((4,0), (12,0), (12, -offset), (4, -offset), mark: (end: ">"))
+
+      content((-5, -offset + 0.75), text(size: 18pt)[$R_(t+1)$])
+      content((-5, -offset - 1), text(size: 18pt)[$S_(t+1)$])
+
+      circle((-12 + 1.75, -offset / 2 + 1), radius: (1.5, 0.75), fill: eastern.mix(white))
+      circle((-12 - 1.75, -offset / 2 + 1), radius: (1.5, 0.75), fill: green.mix(white))
+      circle((12 - 1.5, -offset / 2 + 1), radius: (1.5, 0.75), fill: blue.mix(white))
+
+      content((-12 + 1.75, -offset / 2 + 1), text(size: 22pt)[reward])
+      content((-12 - 1.75, -offset / 2 + 1), text(size: 22pt)[state])
+      content((12 - 1.5, -offset / 2 + 1), text(size: 22pt)[action])
+
+      content((-12 + 0.75, -offset / 2 - 0.25), text(size: 18pt)[$R_t$])
+      content((-12 - 0.75, -offset / 2 - 0.25), text(size: 18pt)[$S_t$])
+      content(( 12 - 0.75, -offset / 2 - 0.25), text(size: 22pt)[$A_t$])
+
+
+    })
+  ],
 )
 
 = Setting the scene
