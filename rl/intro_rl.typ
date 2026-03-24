@@ -23,7 +23,7 @@
 #show: university-theme.with(
   aspect-ratio: "16-9",
   // align: horizon,
-  config-common(handout: true),
+  config-common(handout: false),
   // config-common(show-notes-on-second-screen: right),
   config-common(frozen-counters: (theorem-counter,)),  // freeze theorem counter for animation
   config-info(
@@ -146,6 +146,8 @@ What makes RL different?
   $
 ]
 
+#pause
+
 #remark[
   In a Markov decision process, the successor state is _solely_ influenced by
   the current state.
@@ -203,6 +205,8 @@ What makes RL different?
   maximization of expected cumulative reward.
 ]
 
+#pause
+
 #remark[
   Do you agree?
 
@@ -220,6 +224,8 @@ What makes RL different?
   $
 ]
 
+#pause
+
 #remark[
   The next action depends _only_ on the current state and nothing else.
 
@@ -234,10 +240,14 @@ What makes RL different?
   $
 ]
 
+#pause
+
 #remark[
   We can control the importance of _immediate_ versus _future_ rewards with
   $gamma in [0,1]$. Also, $gamma < 1$ helps with the series converging.
 ]
+
+---
 
 #definition[
   The state-value function of a state $s$ is the expected discounted return
@@ -246,6 +256,8 @@ What makes RL different?
     v_(pi) (s) := EE_(pi) [G_t | S_t = s].
   $
 ]
+
+#pause
 
 #definition[
   The action-value function of a state-action pair $(s, a)$ is the expected
@@ -262,6 +274,8 @@ What makes RL different?
     v_pi (s) = EE_pi [R_(t+1) + gamma v_pi (S_(t+1)) | S_t = s]
   $
 ]
+
+#pause
 
 #proof[
   $
@@ -280,6 +294,8 @@ What makes RL different?
   $
 ]
 
+#pause
+
 #proof[
   $
     q_pi (s, a) &:= EE_pi [G_t | S_t = s, A_t = a] \
@@ -296,6 +312,8 @@ What makes RL different?
     v_pi (s) = sum_(a in cal(A)) pi(a|s) q_pi (s, a)
   $
 ]
+
+#pause
 
 #proof[
   $
@@ -485,6 +503,8 @@ What makes RL different?
   $
 ]
 
+#pause
+
 #remark[
   That is, $pi^*$ is optimal if the value function induced by following $pi^*$
   is optimal.
@@ -647,7 +667,7 @@ What makes RL different?
 == Onto the practice session
 From the Bellman equations to:
 
-- Value iteration,
+- Bellman equation for the _state_-value function $==>$ Value iteration
 
-- Q-learning.
+- Bellman equation for the _action_-value function $==>$ Q-learning
 

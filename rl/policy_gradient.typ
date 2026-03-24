@@ -23,7 +23,7 @@
 #show: university-theme.with(
   aspect-ratio: "16-9",
   // align: horizon,
-  config-common(handout: true),
+  config-common(handout: false),
   // config-common(show-notes-on-second-screen: right),
   config-common(frozen-counters: (theorem-counter,)),  // freeze theorem counter for animation
   config-info(
@@ -76,10 +76,14 @@
 
   - implicit policy
 
+#pause
+
 - Policy based:
   - no value function
 
   - learnt policy
+
+#pause
 
 - Actor Critic:
   - learnt value function
@@ -92,6 +96,8 @@
 - This could be the weights and biases of a neural net.
 
 - We want the policy to be differentiable with respect to the parameters.
+
+#pause
 
 #figure(
   align(center)[
@@ -171,12 +177,13 @@
 Define the following objective functions
 
 $
-  J_1 (theta) &= v_(pi_theta) (s_1) = EE_(pi_theta) [v_1] flushr("(start value)") \
-  J_2 (theta) &= sum_(s in cal(S)) d^(pi_theta) v_(pi_theta) (s) flushr("(avg value)") \
+  J_1 (theta) &= v_(pi_theta) (s_1) = EE_(pi_theta) [v_1] flushr("(start value)") #pause\
+  J_2 (theta) &= sum_(s in cal(S)) d^(pi_theta) v_(pi_theta) (s) flushr("(avg value)") #pause\
   J_3 (theta) &= sum_(s in cal(S)) d^(pi_theta) (s) sum_(a in cal(A)) pi_theta
 (s, a) cal(R)_s^a flushr("(avg reward)")
 $
 
+#meanwhile
 where $d^(pi_theta) (s)$ is the stationary distribution of the Markov chain for $pi_theta$.
 
 *Goal:* Find $theta$ that maximizes $J(theta)$.
@@ -189,7 +196,7 @@ where $d^(pi_theta) (s)$ is the stationary distribution of the Markov chain for 
 ]
 
 #proof[
-  See #link("http://www.incompleteideas.net/book/RLbook2020.pdf", "Sutton-Barto RL bible") chapter 13.2.
+  See #text(blue.mix(white).mix(blue))[#link("http://www.incompleteideas.net/book/RLbook2020.pdf", "Sutton-Barto RL bible")] chapter 13.2.
 ]
 
 ---
@@ -198,6 +205,7 @@ an expectation"_:
 $
   nabla J(theta) = EE_pi [sum_(a in cal(A)) nabla_theta pi(a|s) q_pi (s, a)]
 $
+#pause
 
 $
   nabla_theta J(theta) &= EE_pi [sum_(a in cal(A)) pi(a|s) q_pi (s, a) (nabla_theta pi(a|s))/(pi(a|s))] \
@@ -210,12 +218,14 @@ With the reverse application of the chain rule we can notice the following
 $
   nabla_theta log pi(a|s) &= (nabla_theta pi(a|s))/(pi_theta (a|s)).
 $
+#pause
 
 Applying this little trick in the formula for the gradient of the objective
 function we get
 $
   nabla_theta J(theta) = EE_pi [q_pi (s, a) nabla_theta log pi(a|s)].
 $
+#pause
 *Remark:* Often the policy gradient theorem is stated in this form, since this is
 the form that is used in practice.
 
@@ -240,8 +250,10 @@ $
   q_pi (s, a) = EE[G_t|S_t=s, A_t=a],
 $
 that is the sampled $G_t$ is an unbiased estimator for $q_pi$.
+#pause
 
 *Problem:* What about the variance of the sample?
+#pause
 
 What if instead of $q_pi (s,a)$ we use $q_pi (s, a) - b(s)$  in the policy gradient theorem?
 $
@@ -256,6 +268,7 @@ $
   = sum_(s in cal(S)) d^pi (s) sum_(a in cal(A)) q_pi (s, a) nabla_theta pi_theta (a|s) -
   sum_(s in cal(S)) d^pi (s) sum_(a in cal(A)) b(s) nabla_theta pi_theta (a|s).
 $
+#pause
 
 The latter part vanishes
 $
@@ -282,11 +295,13 @@ $
 *Question:* What should $b(s)$ be? \
 Have we seen a function before that depends
 only on the current state?
+#pause
 
 Lets use $v_pi (s)$ as the baseline. With it we will have $q_pi (s, a) - v_pi (s)$ in the policy gradient theorem, this is called the _advantage_
 $
   A(s, a) := q_pi (s, a) - v_pi (s).
 $
+#pause
 
 *Remark:* Informally speaking, the advantage measures how much better an action
 $a$ is with respect to how good the current state $s$ is.
@@ -321,12 +336,13 @@ $
   &= q_pi (s, a) - v_pi (s) \
   &:= A(s, a).
 $
+#pause
 
 The previous means that the TD error is an unbiased estimator for the
 advantage. With this said, we can give the formula for the gradient of the
 objective yet again
 $
-  nabla J(theta) = EE_pi [nabla log pi(a|s) delta_pi].
+  nabla J(theta) = EE_pi [delta_pi nabla log pi(a|s)].
 $
 
 ---
