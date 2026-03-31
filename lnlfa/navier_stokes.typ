@@ -358,29 +358,16 @@ flow is created inside the domain.
     x_n ->_(n -> oo) A x$ in $Y$.
   ]
 
-<<<<<<< Updated upstream
   Since $H^1 (Omega) subset.double L^4 (Omega)$ that means that the inclusion
   operator is compact, and the image of $u$ is of course $u$, so we have $u^n
   -> u$ in $L^4 (Omega)$.
 
 
-  For a given $v in V(Omega)$ let us take a $v^n in V^n (Omega)$ from each
-  finite dimensional subspace such that
-=======
-  Since $H^1 (Omega) subset.double L^4 (Omega)$ we have $uu^n -> uu$ in $L^4
-  (Omega)$.
-
-
   For a given $vv in V(Omega)$ let $vv^n in V^n$ be such that
->>>>>>> Stashed changes
   $
     lim_(n -> oo) norm(vv^n - vv)_(H^1) = 0.
   $
-<<<<<<< Updated upstream
-  That is, the sequence $(v^n)_(n=1)^oo$ approximates $v$ in finite dimensions.
-=======
   That is, the sequence $(vv^n)$ approximates $vv$ in finite dimensions.
->>>>>>> Stashed changes
 
   Since $b: L^4 (Omega) times H^1 (Omega) times L^4 (Omega) -> RR$ is bounded
   (thus continuous), we have
