@@ -23,7 +23,7 @@
 #show: university-theme.with(
   aspect-ratio: "16-9",
   // align: horizon,
-  config-common(handout: false),
+  config-common(handout: true),
   // config-common(show-notes-on-second-screen: right),
   config-common(frozen-counters: (theorem-counter,)),  // freeze theorem counter for animation
   config-info(
@@ -488,7 +488,121 @@ $
   $
 ]
 
-#proof[
-  Write up the definition, collect terms, collapse the geometric series.
+//
+// $
+//   hat(A)_t^("GAE"(gamma, lambda)) &:= (1 - lambda) (hat(A)_t^((1)) + lambda hat(A)_t^((2)) + lambda^2 hat(A)_t^((3)) + ... ) \
+//   &= (1 - lambda) (delta_t + lambda (delta_t + gamma delta_(t+1)) + lambda^2 (delta_t + gamma delta_(t+1) + gamma^2 delta_(t+2)) + ...) \
+//   &= (1 - lambda) (delta_t (1 + lambda + lambda^2 + ...) + gamma delta_(t+1) (lambda + lambda^2 + lambda^3 + ...) \
+//   &quad + gamma^2 delta_(t+2) (lambda^2 + lambda^3 + lambda^4 + ...) + ...) \
+//   &= (1 - lambda) (delta_t (1/(1-lambda)) + gamma delta_(t+1)(lambda/(1 - lambda)) + gamma^2 delta_(t+2)(lambda^2/(1 - lambda)) + ...) \
+//   &= sum_(l = 0)^oo (gamma lambda)^l delta_(t + l)
+// $
+
+$
+  hat(A)_t^(gamma, lambda) &:= (1 - lambda) sum_(k=1)^oo lambda^(k - 1) hat(A)_t^((k)) \
+  &= (1 - lambda) sum_(k=1)^oo lambda^(k-1) (sum_(l=0)^(k-1) gamma^l delta_(t+l)) \
+  &= (1 - lambda) sum_(l=0)^oo gamma^l delta_(t+l) (sum_(k=l+1)^oo lambda^(k-1)) \
+  &= (1 - lambda) sum_(l=0)^oo gamma^l delta_(t+l) lambda^l/(1 - lambda) \
+  &= sum_(l=0)^oo (gamma lambda)^l delta_(t + l)
+$
+
+== Importance sampling
+- In REINFORCE we collect a new batch for each training step.
+  - This is terribly wasteful. 
+
+- We want to run multiple training steps on the same batch.
+  - We have a batch $(s_t, a_t) ~ pi_(theta_"old")$
+
+#proposition[
+  $
+    EE_(pi_theta)[f(s, a)] approx EE_(pi_theta_"old") [(pi_theta (a|s))/(pi_theta_"old" (a|s)) f(s, a)]
+  $
 ]
+
+---
+
+#proof[
+  $
+    EE_(pi_theta)[f(s, a)] &:= sum_(s in cal(S)) d^(pi_theta)(s) sum_(a in cal(A)) pi_theta (a|s) f(s, a) \
+    &= sum_(s in cal(S)) d^(pi_"old") (s) dot (d^(pi_theta)(s))/(d^(pi_"old")(s)) sum_(a in cal(A)) pi_"old" (a|s) dot (pi_theta (a|s))/(pi_"old" (a|s)) f(s, a) \
+    &= EE_(pi_"old") [ (d^(pi_theta)(s))/(d^(pi_"old")(s)) dot (pi_theta (a|s))/(pi_"old" (a|s)) dot f(s, a) ] \
+    &approx EE_(pi_"old") [(pi_theta (a|s))/(pi_"old" (a|s)) dot f(s, a)]
+  $
+]
+
+---
+Let $f(s, a) = nabla_theta log pi_theta (a|s) A_t$, then
+$
+  nabla_theta J(theta) &= EE_(pi_theta) [nabla_theta log pi_theta (a_t|s_t) dot A_t] flushr("(PG theoerm)") \
+  &approx EE_(pi_"old") [(pi_theta (a_t|s_t))/(pi_"old" (a_t|s_t)) dot nabla_theta log pi_theta (a_t|s_t) dot A_t] \
+  &approx EE_(pi_"old") [r_t (theta) dot nabla_theta log pi_theta (a_t|s_t) dot A_t],
+$
+where
+$
+  r_t (theta) = (pi_theta (a_t|s_t))/(pi_"old" (a_t|s_t)).
+$
+
+---
+
+Notice the following
+$
+  nabla_theta r_t (theta) &= nabla_theta ((pi_theta (a_t|s_t))/(pi_"old" (a_t|s_t))) \
+  &= 1/(pi_"old" (a_t|s_t)) nabla_theta pi_theta (a_t|s_t) \
+  &= (pi_theta (a_t|s_t))/(pi_"old" (a_t|s_t)) dot nabla_theta log pi_theta (a_t|s_t) \
+  &= r_t (theta) nabla_theta log pi_theta (a_t|s_t).
+$
+
+With this we have
+$
+    nabla_theta J(theta) approx EE_(pi_"old") [nabla_theta r_t (theta) A_t] = nabla_theta EE_(pi_"old") [r_t (theta) A_t]
+$
+
+With the previous arguments we can see that the following loss function has approximately the same gradient as the original
+$
+  L^"CPI" (theta) = EE_(pi_"old") [r_t (theta) A_t].
+$
+
+This loss function is called _conservative policy iteration_.
+
+Since we cannot compute $EE [dot]$  exactly and we don't know $A_t$ exactly we
+must approximate $EE$ with the sample average and $A_t$ with $hat(A)_t$.
+
+*Intuition:* We reuse data sample with the _old policy_ but we want expectation
+under the _new policy_. For this we correct with _how much more likely_ we are to
+take action $a$ at state $s$ following the new strategy than with the old
+strategy.
+
+== Trust region
+During training $r_t (theta)$ becomes either huge or tiny:
+- If $A_t > 0$, then optimizer moves $r_t -> oo$.
+- If $A_t < 0$, then optimizer moves $r_t -> 0$.
+
+Solution: *TRPO*, *PPO*.
+
+*PPO*: Let's prevent huge updates by clipping the ratio.
+
+We define the _PPO clipped surrogate loss function_ as follows
+$
+  L^"CLIP" (theta) = EE [min(r_t (theta) A_t), quad "clip" (r_t (theta), 1-epsilon, 1+epsilon) A_t].
+$
+
+== Clipped surrogate
+
+#figure(
+  image("ppo_clipped_surrogate.png")
+)
+
+== Recap
+- Value based methods don't work well for big or continuous action spaces.
+  - Policy gradient methods.
+- REINFORCE
+  - Maximize returns weighted by log-probs.
+- Advantage
+  - Reduce variance.
+- Importance sampling.
+  - Reuse old data, correct with $r_t (theta)$.
+- Trust region.
+  - Keep policy changes conservative.
+- Clipped surrogate (PPO)
+  - Simplest was to enforce trust region.
 
