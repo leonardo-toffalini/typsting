@@ -402,11 +402,44 @@ What makes RL different?
   $
 ]
 
+---
+
+#proof[
+  $
+    v_pi (s) = sum_(a in cal(A)) pi(a|s) &underbrace(q_pi (s, a)) \
+    &q_pi (s, a) = cal(R)_s^a + gamma sum_(s' in cal(S)) cal(P)_(s s')^a v_pi (s')
+  $
+
+  $
+    ==> v_pi (s) = sum_(a in cal(A)) pi(a|s) (cal(R)_s^a + gamma sum_(s' in S)
+  cal(P)_(s s')^a v_pi (s'))
+  $
+
+]
+
+---
+
 #proposition[
   $
     q_pi (s, a) = cal(R)_s^a + gamma sum_(s' in cal(S)) cal(P)_(s s')^a sum_(a'
   in cal(A)) pi(a'|s') q_pi (s', a')
   $
+]
+
+---
+
+#proof[
+  $
+    q_pi (s, a) = cal(R)_s^a + gamma sum_(s' in cal(S)) cal(P)_(s s')^a
+  &underbrace(v_pi (s')) \
+    &v_pi (s') = sum_(a' in cal(A)) pi(a'|s') q_pi (s', a')
+  $
+
+  $
+    ==> q_pi (s, a) = cal(R)_s^a + gamma sum_(s' in cal(S)) cal(P)_(s s')^a sum_(a'
+  in cal(A)) pi(a'|s') q_pi (s', a')
+  $
+
 ]
 
 == Backup diagram

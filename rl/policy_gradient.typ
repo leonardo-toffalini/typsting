@@ -208,8 +208,8 @@ $
 #pause
 
 $
-  nabla_theta J(theta) &= EE_pi [sum_(a in cal(A)) pi(a|s) q_pi (s, a) (nabla_theta pi(a|s))/(pi(a|s))] \
-  &= EE_pi [EE_pi [q_pi (s, a) (nabla_theta pi(a|s))/(pi(a|s))]] \
+  nabla_theta J(theta) &= EE_pi [sum_(a in cal(A)) pi(a|s) q_pi (s, a) (nabla_theta pi(a|s))/(pi(a|s))] #pause \
+  &= EE_pi [EE_pi [q_pi (s, a) (nabla_theta pi(a|s))/(pi(a|s))]] #pause \
   &= EE_pi [q_pi (s, a) (nabla_theta pi(a|s))/(pi(a|s))]
 $
 
@@ -235,10 +235,11 @@ function we need to know the action-value function $q_pi$, instead we want to
 estimate it as follows
 
 $
-  nabla_theta J(theta) &= EE_pi [q_pi (s, a) nabla_theta log pi(a|s)] \
-  nabla_theta J(theta) &= EE_pi [EE_pi [G_t|S_t = s, A_t = a] dot nabla_theta log pi(a|s)] \
+  nabla_theta J(theta) &= EE_pi [q_pi (s, a) nabla_theta log pi(a|s)] #pause \
+  nabla_theta J(theta) &= EE_pi [EE_pi [G_t|S_t = s, A_t = a] dot nabla_theta log pi(a|s)] #pause \
   nabla_theta J(theta) &= EE_pi [G_t dot nabla_theta log pi (a|s)].
 $
+#pause
 
 $==>$ *REINFORCE*
 
@@ -331,9 +332,9 @@ $
 
 With the TD error we get the following reformulation for the advantage
 $
-  EE_pi [delta_pi|S_t = s, A_t = a] &= EE_pi [R_t + gamma v_pi (S_(t+1)) - v_pi (S_t)|S_t = s, A_t = a] \
-  &= EE_pi [R_t + gamma v_pi (S_(t+1))|S_t = s, A_t = a] - v_pi (s) \
-  &= q_pi (s, a) - v_pi (s) \
+  EE_pi [delta_pi|S_t = s, A_t = a] &= EE_pi [R_t + gamma v_pi (S_(t+1)) - v_pi (S_t)|S_t = s, A_t = a] #pause \
+  &= EE_pi [R_t + gamma v_pi (S_(t+1))|S_t = s, A_t = a] - v_pi (s) #pause \
+  &= q_pi (s, a) - v_pi (s) #pause \
   &:= A(s, a).
 $
 #pause
