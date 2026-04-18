@@ -42,9 +42,9 @@ $
   nabla dot uu &= 0 \
   uu|_(partial Omega) &= 0,
 $
-where $uu = (u_1, u_2, u_3)$. Alternatively, componentwise for $i = 1, ..., 3$
+where $uu = (u_1, u_2, u_3)$. Alternatively, componentwise
 $
-  -mu Delta u_i + sum_(j=1)^3 u_j partial_j u_i + partial_i p &= f_i \
+  -mu Delta u_i + sum_(j=1)^3 u_j partial_j u_i + partial_i p &= f_i flushr((i = 1, 2, 3)) \
   sum_(j=1)^3 partial_j u_j &= 0\
   u_i|_(partial Omega) &= 0.
 $
@@ -92,7 +92,7 @@ flow is created inside the domain.
     - mu Delta uu + (uu dot nabla) uu + nabla p &= ff flushr((\/ dot vv in H^1_0 (Omega))) \
     (- mu Delta uu + (uu dot nabla) uu + nabla p ) dot vv &= ff dot vv flushr((\/ integral_Omega)) \
     integral_Omega (- mu Delta uu + (uu dot nabla) uu + nabla p ) dot vv &= integral_Omega ff dot vv \
-    mu integral_Omega (- Delta uu) : vv + integral_Omega (uu dot nabla) uu dot vv + integral_Omega nabla p dot v &= integral_Omega ff dot vv
+    mu integral_Omega (- Delta uu) dot vv + integral_Omega (uu dot nabla) uu dot vv + integral_Omega nabla p dot v &= integral_Omega ff dot vv
   $)
 
   By Green's formula we have
@@ -213,7 +213,7 @@ flow is created inside the domain.
   #proof[
     We have
     $
-      b(ww, vv, vv) &= integral_Omega w_j (partial_j v_i) v_i = 1/2 integral_Omega w_j partial_j (v_i^2)
+      b(ww, vv, vv) &= sum_(j=1)^3 integral_Omega w_j (partial_j v_i) v_i = sum_(j=1)^3 1/2 integral_Omega w_j partial_j (v_i^2)
     $
     or more concisely
     $
