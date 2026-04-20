@@ -23,7 +23,7 @@
 #show: university-theme.with(
   aspect-ratio: "16-9",
   // align: horizon,
-  config-common(handout: true),
+  config-common(handout: false),
   // config-common(show-notes-on-second-screen: right),
   config-common(frozen-counters: (theorem-counter,)),  // freeze theorem counter for animation
   config-info(
@@ -250,7 +250,7 @@ By definition
 $
   q_pi (s, a) = EE[G_t|S_t=s, A_t=a],
 $
-that is the sampled $G_t$ is an unbiased estimator for $q_pi$.
+that is, the sampled $G_t$ is an unbiased estimator for $q_pi$.
 #pause
 
 *Problem:* What about the variance of the sample?
@@ -345,20 +345,6 @@ objective yet again
 $
   nabla J(theta) = EE_pi [delta_pi nabla log pi(a|s)].
 $
-
----
-Having established the reformulation of the gradient step only in terms of the
-state-value function it is sufficient to estimate only that.
-
-*Problem:* How do we estimate the state-value function?
-
-$==>$ Homework for the curious.
-
-*Problem:* The TD error is an unbiased estimator for the advantage _only if_ we
-have access to the true value function $v_pi$, but we only have an estimate of
-that too: $hat(v)_pi$.
-
-$==>$ If $hat(v)_pi$ has high bias then so will $hat(A)(s, a)$.
 
 ---
 
@@ -461,6 +447,20 @@ $==>$ If $hat(v)_pi$ has high bias then so will $hat(A)(s, a)$.
     })
   ]
 )
+
+---
+Having established the reformulation of the gradient step only in terms of the
+state-value function it is sufficient to estimate only that.
+
+*Problem:* How do we estimate the state-value function?
+
+$==>$ Homework for the curious.
+
+*Problem:* The TD error is an unbiased estimator for the advantage _only if_ we
+have access to the true value function $v_pi$, but we only have an estimate of
+that too: $hat(v)_pi$.
+
+$==>$ If $hat(v)_pi$ has high bias then so will $hat(A)(s, a)$.
 
 == Generalized advantage estimator
 The advantage estimate had the issue that if we estimate $hat(v)_pi$ then the
@@ -584,7 +584,7 @@ Solution: *TRPO*, *PPO*.
 
 We define the _PPO clipped surrogate loss function_ as follows
 $
-  L^"CLIP" (theta) = EE [min(r_t (theta) A_t), quad "clip" (r_t (theta), 1-epsilon, 1+epsilon) A_t].
+  L^"CLIP" (theta) = EE [min(r_t (theta) A_t, quad "clip"(r_t (theta), 1-epsilon, 1+epsilon) A_t)].
 $
 
 == Clipped surrogate
