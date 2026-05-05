@@ -23,7 +23,7 @@
 #show: university-theme.with(
   aspect-ratio: "16-9",
   // align: horizon,
-  config-common(handout: false),
+  config-common(handout: true),
   // config-common(show-notes-on-second-screen: right),
   config-common(frozen-counters: (theorem-counter,)),  // freeze theorem counter for animation
   config-info(
