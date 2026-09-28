@@ -76,7 +76,43 @@
 ]
 
 #solution[
-  TODO
+  By Kuiper's theorem two matrices $A, B in L(RR^4)$, where $c(A) = c(B) = 4$
+  are $C^0$-equivalent if and only if they are linearly equivalent.
+
+  We will show a construction where we have a family of infinitely many
+  linearly non equivalent matrices that all have $c(A_n) = 4$.
+
+  Let us take the last example of the $L(RR^2)$ $C^0$-equivalence classes $B =
+  mat(0, -1; 1, 0)$. From this $2 times 2$ matrix we can construct a $4 times
+  4$ matrix like $A_n = mat(B, 0; 0, n B)$.
+
+  The eigenvalues of $B$ are $plus.minus i$, wheras the eigenvalues of $n B$
+  are $plus.minus n i$. Since $A_n$ is a block matrix with blocks $B$ and $n
+  B$, it's eigenvalues are therefore ${-i, +i, -n i, +n i}$. We can clearly see
+  that all of the eigenvalues for any $n > 0$ have zero real part, thus in fact
+  $c(A_n) = 4 quad forall n > 0$.
+
+  We have shown that to any $A_n$ the Kuiper theorem applies, now we just need
+  to show that $A_n$ and $A_m$ are linearly independent for any $n != m$.
+
+  $A_n$ and $A_m$ are linearly equivalent if $exists alpha, P$ such that $A_n =
+  alpha P A_m P^(-1)$. Given that $A_n$ and $A_m$ have the same upper left
+  block $B$, we can conclude that $alpha$ must be $1$. Now we just need to show
+  that $A_n$ are $A_m$ are not similar.
+
+  We know that if two matrices are similar then they share the same
+  eigenvalues, however, in our case $lambda(A_n) = {plus.minus i, plus.minus n
+  i}$ and $lambda(A_m) = {plus.minus i, plus.minus m i}$, that is $lambda (A_n)
+  != lambda (A_m)$, therefore the two cannot be similar.
+
+  We have just shown a construction where $c(A_n) = 4$ and $A_n$ and $A_m$ are
+  not similar for any $n != m$, thus Kuiper's theorem tells us that all $A_n$
+  are in different classes for all $n > 0$, and since there are (countably)
+  infinitely many choices for $n$ there are (countably) infinitely many
+  $C^0$-equivalence classes in $L(RR^4)$.
+
+  Note, that this argument can be extended to use $x in RR^+$ instead of $n in
+  ZZ^+$ to give us uncountably infinitely many equivalence classes.
 ]
 
 #pagebreak()
@@ -112,7 +148,7 @@
   eigenvalues, meaning that $"Re"(x) = x$.
 
   According to Kuiper's theorem we need only know the sign of the eigenvalues
-  to characterize the $C^0$-equivalnce. To find the sign we can solve the
+  to characterize the $C^0$-equivalence. To find the sign we can solve the
   equation $x_(1, 2) (lambda) = 0$.
 
   After some calculations we can come to the conclusion that the original
